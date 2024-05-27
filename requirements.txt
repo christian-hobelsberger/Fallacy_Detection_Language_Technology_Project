@@ -1,0 +1,7 @@
+torch
+enum
+huggingface-hub
+typing
+itertools
+json
+transformers
