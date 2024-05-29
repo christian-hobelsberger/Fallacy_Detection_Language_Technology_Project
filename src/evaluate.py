@@ -592,7 +592,14 @@ def evaluate(dataset_path: str, prediction_path: str):
 
 
 def eval_dataset(dataset_path: str, results_path: str):
-    with open("result_subjective_metric.csv", "w") as out:
+    # Extract the name of the subdirectory to use in the output file name
+    subdir_name = os.path.basename(results_path.rstrip('/'))
+    output_file = f"evaluation/result_subjective_metric_{subdir_name}.csv"
+
+    # Ensure the directory exists.
+    os.makedirs(os.path.dirname("evaluation/"), exist_ok=True)
+
+    with open(output_file, "w") as out:
         csv_out = csv.writer(out)
         csv_out.writerow(
             [

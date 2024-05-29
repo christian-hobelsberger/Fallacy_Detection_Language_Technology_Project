@@ -14,7 +14,7 @@ from src.experiments_pipelines.chatbot import ChatBotLLM
 from src.process_docanno_data import process_data
 from src.utils import read_jsonl
 
-PROMPT = {
+CHAIN_OF_THOUGHT = {
     0: """
     {instruction_begin}
 
@@ -82,91 +82,99 @@ PROMPT = {
 }
 
 
-# ALT_PROMPT = {
-#     0: """
-#     {instruction_begin}
+ALT_PROMPT = {
+    0: """
+    {instruction_begin}
 
-#     Definitions:
-#     - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
-#     - A fallacious argument is an argument where the premises do not entail the conclusion.
+    Definitions:
+    - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
+    - A fallacious argument is an argument where the premises do not entail the conclusion.
 
-#     Text: "{example_input}"
+    Text: "{example_input}"
 
-#     Based on the above text, determine whether the following sentence is part of a fallacious argument or not:
+    Based on the above text, determine whether the following sentence is part of a fallacious argument or not:
     
-#     Sentence: "{sentence_input}" {instruction_end}
+    Sentence: "{sentence_input}" {instruction_end}
     
-#     Output:
+    Output:
     
-#     """,
-#     1: """
-#     {instruction_begin}
+    """,
+    1: """
+    {instruction_begin}
 
-#     Definitions:
-#     - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
-#     - A fallacious argument is an argument where the premises do not entail the conclusion.
+    Definitions:
+    - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
+    - A fallacious argument is an argument where the premises do not entail the conclusion.
 
-#     Text: "{example_input}"
+    Text: "{example_input}"
 
-#     Based on the above text, determine whether the following sentence is part of a fallacious argument or not. If it is, indicate the type(s) of fallacy without providing explanations. The potential types of fallacy include:
-#     - appeal to emotion
-#     - fallacy of logic
-#     - fallacy of credibility    
+    Based on the above text, determine whether the following sentence is part of a fallacious argument or not. If it is, indicate the type(s) of fallacy without providing explanations. The potential types of fallacy include:
+    - appeal to emotion
+    - fallacy of logic
+    - fallacy of credibility    
     
-#     Sentence: "{sentence_input}" {instruction_end}
+    Sentence: "{sentence_input}" {instruction_end}
     
-#     Output:
+    Output:
         
-#     """,
-#     2: """
-#     {instruction_begin}
+    """,
+    2: """
+    {instruction_begin}
 
-#     Definitions:
-#     - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
-#     - A fallacious argument is an argument where the premises do not entail the conclusion.
+    Definitions:
+    - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
+    - A fallacious argument is an argument where the premises do not entail the conclusion.
     
-#     Text: "{example_input}"
+    Text: "{example_input}"
 
-#     Based on the above text, determine whether the following sentence is part of a fallacious argument or not. If it is, indicate the type(s) of fallacy without providing explanations. The potential types of fallacy include:
-#     - appeal to positive emotion
-#     - appeal to anger
-#     - appeal to fear
-#     - appeal to pity
-#     - appeal to ridicule
-#     - appeal to worse problems
-#     - causal oversimplification
-#     - circular reasoning
-#     - equivocation
-#     - false analogy
-#     - false causality
-#     - false dilemma
-#     - hasty generalization
-#     - slippery slope
-#     - straw man
-#     - fallacy of division
-#     - ad hominem
-#     - ad populum
-#     - appeal to (false) authority
-#     - appeal to nature
-#     - appeal to tradition
-#     - guilt by association
-#     - tu quoque
+    Based on the above text, determine whether the following sentence is part of a fallacious argument or not. If it is, indicate the type(s) of fallacy without providing explanations. The potential types of fallacy include:
+    - appeal to positive emotion
+    - appeal to anger
+    - appeal to fear
+    - appeal to pity
+    - appeal to ridicule
+    - appeal to worse problems
+    - causal oversimplification
+    - circular reasoning
+    - equivocation
+    - false analogy
+    - false causality
+    - false dilemma
+    - hasty generalization
+    - slippery slope
+    - straw man
+    - fallacy of division
+    - ad hominem
+    - ad populum
+    - appeal to (false) authority
+    - appeal to nature
+    - appeal to tradition
+    - guilt by association
+    - tu quoque
     
-#     Sentence: "{sentence_input}" {instruction_end}
+    Sentence: "{sentence_input}" {instruction_end}
     
-#     Output:
-#     """,
-# }
+    Output:
+    """,
+}
 
 
 def zero_or_few_shots_pipeline(
     model: LLaMABasedQuantizedModel,
     dataset_path: str = None,
+    prompt: str = None,
     prediction_path: str = None,
     level: int = 0,
     # alt_prompt: bool = True,
 ):
     logger = logging.getLogger("MafaldaLogger")
+
+    if prompt == "CoT":
+        template = CHAIN_OF_THOUGHT[level]
+    # elif prompt == "ToT":
+    #     print('lol')
+    # elif prompt == "baseline":
+    #     print('lol')
 
     prompt = PromptTemplate(
             input_variables=[
@@ -175,7 +183,7 @@ def zero_or_few_shots_pipeline(
                 "instruction_begin",
                 "instruction_end",
             ],
-            template=PROMPT[level],
+            template=template,
         )
 
     chatbot_model = ChatBotLLM(model=model)
@@ -203,6 +211,9 @@ def zero_or_few_shots_pipeline(
                     all_lines = f.readlines()
                     with open(prediction_path, "w") as fw:
                         fw.writelines(all_lines[:-1])
+
+    # Ensure the prediction_path directory exists
+    os.makedirs(os.path.dirname(prediction_path), exist_ok=True)
 
     with open(prediction_path, "a") as f:
         for example, processed_example in tqdm(

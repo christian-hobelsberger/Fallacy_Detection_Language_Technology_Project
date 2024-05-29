@@ -1,5 +1,7 @@
 import argparse
 
+import os
+
 from src.classification_models.baseline_models import RandomModel, SilentModel
 from src.classification_models.openai_based_models import ChatGPTModel
 from src.classification_models.quantized_llama_based_models import (
@@ -11,7 +13,7 @@ from src.users_study_evaluation import users_study_evaluation
 from src.utils import setup_logger
 
 def run_experiment(
-        model: str, size: str, quantization: str, level: int, n_gpu_layers: int = 0,
+        model: str, size: str, quantization: str, prompt: str, level: int, n_gpu_layers: int = 0,
         ):
 
     model = LLaMABasedQuantizedModel(
@@ -24,18 +26,29 @@ def run_experiment(
     zero_or_few_shots_pipeline(
         model=model,
         dataset_path="datasets/gold_standard_dataset.jsonl",
-        prediction_path=f"results/{model.model_name.split('/')[-1]}_level_{level}_results.jsonl",
+        prompt=prompt,
+        prediction_path=f"results/{prompt}/{model.model_name.split('/')[-1]}_level_{level}_results.jsonl",
         level=level,
     )
 
 def models_evaluation():
-    eval_dataset("datasets/gold_standard_dataset.jsonl", "results")
+    results_dir = "results"
+    dataset_path = "datasets/gold_standard_dataset.jsonl"
+    
+    # List all immediate child directories of the results directory
+    for subdir in os.listdir(results_dir):
+        subdir_path = os.path.join(results_dir, subdir)
+        
+        # Check if it is a directory
+        if os.path.isdir(subdir_path):
+            eval_dataset(dataset_path, subdir_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, help="Model name")
     parser.add_argument("--size", type=str, help="Model size")
     parser.add_argument("--quantization", type=str, help="Quantization")
+    parser.add_argument("--prompt", type=str, help="Prompting technique")
     parser.add_argument("--level", type=int, help="Level")
     parser.add_argument(
         "--n_gpu_layers", type=int, help="Number of GPUs for layer", default=0
@@ -72,6 +85,7 @@ if __name__ == "__main__":
                     model=args.model,
                     size=args.size,
                     quantization=args.quantization,
+                    prompt=args.prompt,
                     level=args.level,
                     n_gpu_layers=args.n_gpu_layers,
                 )

@@ -10,6 +10,7 @@ default_quantization="4-bit"
 default_size="8B"
 default_gpu_layers="100"
 default_level="2"
+default_prompt="CoT"
 
 # Display list of models and read selection
 echo "Select a model from the list below by entering its number:"
@@ -46,13 +47,16 @@ gpu_layers=${gpu_layers:-$default_gpu_layers}
 read -p "Enter level (default: $default_level): " level
 level=${level:-$default_level}
 
+read -p "Enter prompt technique (default: $default_prompt): " prompt technique
+prompt=${prompt:-$default_prompt}
+
 # Export GPU devices to be used by CUDA
 export CUDA_VISIBLE_DEVICES=$gpus
 
 # Command construction
-cmd="python3 cli.py --model $modelname --size $size --quantization $quantization"
+cmd="python3 cli.py --model $modelname --size $size --quantization $quantization --prompt $prompt"
 
 # Iterate over levels
 
-echo "Running $modelname experiments with size $size, quantization $quantization at level $level with $gpu_layers GPU layers on devices $gpus"
+echo "Running $modelname using $prompt prompting technique with size $size, quantization $quantization at level $level with $gpu_layers GPU layers on devices $gpus"
 $cmd --level $level --n_gpu_layers $gpu_layers
