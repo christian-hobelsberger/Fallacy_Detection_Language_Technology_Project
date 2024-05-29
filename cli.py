@@ -1,101 +1,32 @@
 import argparse
-from types import MethodType
 
-import torch
-
-from transformers import AutoTokenizer, AutoModel
-
-from src.classification_models.baseline_models import RandomModel, SilentModel
-from src.classification_models.openai_based_models import ChatGPTModel
+# from src.classification_models.baseline_models import RandomModel, SilentModel
+# from src.classification_models.openai_based_models import ChatGPTModel
 from src.classification_models.quantized_llama_based_models import (
     LLaMABasedQuantizedModel,
 )
-from src.evaluate import eval_dataset
+# from src.evaluate import eval_dataset
 from src.experiments_pipelines.pipelines import zero_or_few_shots_pipeline
-from src.users_study_evaluation import users_study_evaluation
+# from src.users_study_evaluation import users_study_evaluation
 from src.utils import setup_logger
 
-HF_TOKEN = "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"
+# HF_TOKEN = "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"
 
-# Determine the best available device
-if torch.cuda.is_available():
-    device = torch.device('cuda')
-elif torch.backends.mps.is_available():
-    device = torch.device('mps')
-else:
-    device = torch.device('cpu')
-
-def dynamic_predict(self, text):
-    inputs = self.tokenizer(text, return_tensors='pt')
-    outputs = self.generate(**inputs)
-    return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-def run_original_experiment(
-    model: str, size: str, quantization: str, level: int, n_gpu_layers: int = 0,
-):
-    model = LLaMABasedQuantizedModel(
-        model_size=size,
-        model_name=model,
-        quantization=quantization,
-        n_gpu_layers=n_gpu_layers,
-    )
-
-    zero_or_few_shots_pipeline(
-        model=model,
-        dataset_path="datasets/gold_standard_dataset.jsonl",
-        prediction_path=f"results/{model.model_name}_{size}_{quantization}_level_{level}_results.jsonl",
-        level=level,
-    )
-
-def run_new_experiment(
+def run_experiment(
         model: str, size: str, quantization: str, level: int, n_gpu_layers: int = 0,
         ):
-    # model = AutoModel.from_pretrained(model_id,
-    #                                   torch_dtype = torch.float16 if device.type in ['cuda', 'mps'] else torch.float32,
-    #                                   low_cpu_mem_usage=True,
-    #                                   token=HF_TOKEN).to(device)
-    # model.tokenizer = AutoTokenizer.from_pretrained(model_id)
-    # model.predict = MethodType(dynamic_predict, model)
 
     model = LLaMABasedQuantizedModel(
         model_size=size,
         model_name=model,
         quantization=quantization,
-        n_gpu_layers=n_gpu_layers,
-    )
+            n_gpu_layers=n_gpu_layers,
+        )
 
     zero_or_few_shots_pipeline(
         model=model,
         dataset_path="datasets/gold_standard_dataset.jsonl",
-        prediction_path=f"results/{model.split('/')[-1]}_level_{level}_results.jsonl",
-        level=level,
-    )
-
-def run_chatgpt_experiment(
-    model_name: str, level: int, api_key: str,
-):
-    model = ChatGPTModel(model_name=model_name, api_key=api_key)
-    zero_or_few_shots_pipeline(
-        model=model,
-        dataset_path="datasets/gold_standard_dataset.jsonl",
-        prediction_path=f"results/{model.model_name}_level_{level}_results.jsonl",
-        level=level,
-    )
-
-def run_baseline_experiment(
-    model_name: str, level: int,
-):
-    if model_name == "base-silent":
-        model = SilentModel(model_name=model_name)
-    elif model_name == "base-random":
-        model = RandomModel(model_name=model_name)
-    else:
-        raise Exception("Unknown baseline model")
-
-    zero_or_few_shots_pipeline(
-        model=model,
-        dataset_path="datasets/gold_standard_dataset.jsonl",
-        prediction_path=f"results/{model.model_name}_level_{level}_results.jsonl",
+        prediction_path=f"results/{model.model_name.split('/')[-1]}_level_{level}_results.jsonl",
         level=level,
     )
 
@@ -121,23 +52,23 @@ if __name__ == "__main__":
     try:
         if args.models_eval:
             # models_evaluation()
-            print('lol')
+            print('NOT IMPLEMENTED')
         elif args.humans_eval:
             # humans_evaluation()
-            print('lol')
+            print('NOT IMPLEMENTED')
         else:
             if args.model[:3] == "gpt":
                 # run_chatgpt_experiment(
                 #     model_name=args.model, level=args.level, api_key=args.api_key,
                 # )
-                print('lol')
+                print('NOT IMPLEMENTED')
             elif args.model[:4] == "base":
                 # run_baseline_experiment(
                 #     model_name=args.model, level=args.level,
                 # )
-                print('lol')
+                print('NOT IMPLEMENTED')
             else:
-                run_new_experiment(
+                run_experiment(
                     model=args.model,
                     size=args.size,
                     quantization=args.quantization,

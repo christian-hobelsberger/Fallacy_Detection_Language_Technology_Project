@@ -7,8 +7,6 @@ from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from tqdm import tqdm
 
-from transformers import models
-
 from src.classification_models.quantized_llama_based_models import (
     LLaMABasedQuantizedModel,
 )
@@ -159,7 +157,7 @@ ALT_PROMPT = {
 
 
 def zero_or_few_shots_pipeline(
-    model: models,
+    model: LLaMABasedQuantizedModel,
     dataset_path: str = None,
     prediction_path: str = None,
     level: int = 0,
@@ -189,8 +187,8 @@ def zero_or_few_shots_pipeline(
         )
 
     chatbot_model = ChatBotLLM(model=model)
-    # if model.model_name == "gpt-3.5":
-    #     chatbot_model.max_length = 1024
+    if model.model_name == "gpt-3.5":
+        chatbot_model.max_length = 1024
     chatbot_chain = LLMChain(llm=chatbot_model, prompt=prompt)
 
     data = read_jsonl(dataset_path)

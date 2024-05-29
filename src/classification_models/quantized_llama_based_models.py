@@ -1,6 +1,36 @@
 import logging
 import os
-from urllib import request
+# from urllib import request
+import re
+from huggingface_hub import hf_hub_download
+
+def extract_hf_url_details(url):
+    # Regex pattern to extract details from the URL
+    pattern = re.compile(
+        r"https://huggingface\.co/(?P<repo_owner>[^/]+)/(?P<repo_name>[^/]+)/resolve/(?P<revision>[^/]+)/(?P<file_path>.+)"
+    )
+    match = pattern.match(url)
+    if match:
+        return match.group("repo_owner"), match.group("repo_name"), match.group("revision"), match.group("file_path")
+    else:
+        raise ValueError("URL does not match the expected Hugging Face URL pattern")
+
+def download_from_hf(url, local_filename):
+    try:
+        repo_owner, repo_name, revision, file_path = extract_hf_url_details(url)
+        repo_id = f"{repo_owner}/{repo_name}"
+        downloaded_file_path = hf_hub_download(
+            repo_id=repo_id,
+            filename=file_path,
+            revision=revision,
+            local_dir=".",
+            local_dir_use_symlinks=False
+        )
+        # Rename the downloaded file to the desired local filename
+        os.rename(downloaded_file_path, local_filename)
+        print(f"Downloaded {local_filename} successfully.")
+    except Exception as e:
+        print(f"Error downloading file: {e}")
 
 import torch
 from llama_cpp import Llama
@@ -143,7 +173,7 @@ LLAMA_BASED_MODELS = {
     },
     "8B": {
         "4-bit": {
-            "QuantFactory/Meta-Llama-3-8B-Instruct-GGUF": {
+            "LLaMA3-Instruct": {
                 "repo": "QuantFactory/Meta-Llama-3-8B-Instruct-GGUF",
                 "model_file_name": "Meta-Llama-3-8B-Instruct.Q4_K_M.gguf",
                 "model_url": "https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf",
@@ -152,7 +182,7 @@ LLAMA_BASED_MODELS = {
             },
         },
         "8-bit": {
-            "QuantFactory/Meta-Llama-3-8B-Instruct-GGUF": {
+            "LLaMA3-Instruct": {
                 "repo": "QuantFactory/Meta-Llama-3-8B-Instruct-GGUF",
                 "model_file_name": "Meta-Llama-3-8B-Instruct.Q8_0.gguf",
                 "model_url": "https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q8_0.gguf",
@@ -225,12 +255,12 @@ LLAMA_BASED_MODELS = {
     },
 }
 
-
 def initialize_model(tmp_model_name: str, url: str, n_gpu_layers: int = 0):
     model_path = f"models/{tmp_model_name}"
     if not os.path.exists(model_path):
         logger.info("Downloading model...")
-        request.urlretrieve(url, model_path)
+        # request.urlretrieve(url, model_path)
+        download_from_hf(url, model_path)
     model = Llama(model_path=model_path, n_ctx=4096, n_gpu_layers=n_gpu_layers, seed=42)
     return model
 
