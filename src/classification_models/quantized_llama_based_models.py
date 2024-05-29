@@ -1,6 +1,5 @@
 import logging
 import os
-# from urllib import request
 import re
 from huggingface_hub import hf_hub_download
 
@@ -69,6 +68,13 @@ LLAMA_BASED_MODELS = {
                 "instruction_begin": "[INST]",
                 "instruction_end": "[/INST]",
             },
+            "Gemma-Instruct": {
+                "repo": "alokabhishek/gemma-1.1-7b-it-GGUF",
+                "model_file_name": "Q4_K_M.gguf",
+                "model_url": "https://huggingface.co/alokabhishek/gemma-1.1-7b-it-GGUF/resolve/main/Q4_K_M.gguf",
+                "instruction_begin": "[INST]",
+                "instruction_end": "[/INST]",
+            },
             "Mistral": {
                 "repo": "TheBloke/Mistral-7B-v0.1-GGUF",
                 "model_file_name": "mistral-7b-v0.1.Q4_K_M.gguf",
@@ -131,6 +137,13 @@ LLAMA_BASED_MODELS = {
                 "repo": "NikolayKozloff/falcon-7b-GGUF",
                 "model_file_name": "falcon-7b-Q8_0-GGUF.gguf",
                 "model_url": "https://huggingface.co/NikolayKozloff/falcon-7b-GGUF/resolve/main/falcon-7b-Q8_0-GGUF.gguf",
+                "instruction_begin": "[INST]",
+                "instruction_end": "[/INST]",
+            },
+            "Gemma-Instruct": {
+                "repo": "ggml-org/gemma-1.1-7b-it-Q8_0-GGUF",
+                "model_file_name": "gemma-1.1-7b-it.Q8_0.gguf",
+                "model_url": "https://huggingface.co/ggml-org/gemma-1.1-7b-it-Q8_0-GGUF/resolve/main/gemma-1.1-7b-it.Q8_0.gguf",
                 "instruction_begin": "[INST]",
                 "instruction_end": "[/INST]",
             },
@@ -259,7 +272,6 @@ def initialize_model(tmp_model_name: str, url: str, n_gpu_layers: int = 0):
     model_path = f"models/{tmp_model_name}"
     if not os.path.exists(model_path):
         logger.info("Downloading model...")
-        # request.urlretrieve(url, model_path)
         download_from_hf(url, model_path)
     model = Llama(model_path=model_path, n_ctx=4096, n_gpu_layers=n_gpu_layers, seed=42)
     return model
