@@ -1,16 +1,14 @@
 import argparse
 
-# from src.classification_models.baseline_models import RandomModel, SilentModel
-# from src.classification_models.openai_based_models import ChatGPTModel
+from src.classification_models.baseline_models import RandomModel, SilentModel
+from src.classification_models.openai_based_models import ChatGPTModel
 from src.classification_models.quantized_llama_based_models import (
     LLaMABasedQuantizedModel,
 )
-# from src.evaluate import eval_dataset
+from src.evaluate import eval_dataset
 from src.experiments_pipelines.pipelines import zero_or_few_shots_pipeline
-# from src.users_study_evaluation import users_study_evaluation
+from src.users_study_evaluation import users_study_evaluation
 from src.utils import setup_logger
-
-# HF_TOKEN = "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"
 
 def run_experiment(
         model: str, size: str, quantization: str, level: int, n_gpu_layers: int = 0,
@@ -29,6 +27,9 @@ def run_experiment(
         prediction_path=f"results/{model.model_name.split('/')[-1]}_level_{level}_results.jsonl",
         level=level,
     )
+
+def models_evaluation():
+    eval_dataset("datasets/gold_standard_dataset.jsonl", "results")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -51,8 +52,7 @@ if __name__ == "__main__":
     logger = setup_logger(logger_filename)
     try:
         if args.models_eval:
-            # models_evaluation()
-            print('NOT IMPLEMENTED')
+            models_evaluation()
         elif args.humans_eval:
             # humans_evaluation()
             print('NOT IMPLEMENTED')

@@ -9,10 +9,10 @@ echo "You selected $selection"
 
 if [ "$selection" -eq 1 ]; then
     echo "Running models evaluation"
-    python cli.py --models_eval
+    python3 cli.py --models_eval
 elif [ "$selection" -eq 2 ]; then
     echo "Running humans evaluation"
-    python cli.py --humans_eval
+    python3 cli.py --humans_eval
 else
     echo "Invalid number. Please enter a number between 1 and 2"
 fi
