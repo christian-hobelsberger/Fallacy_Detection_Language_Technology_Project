@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# List of valid model ids
-valid_models=("LLaMA3-Instruct")
+# List of valid models
+valid_models=("LLaMA3-Instruct" "Mistral-Instruct")
 
 # Default values
 default_model_index="1"
