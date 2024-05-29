@@ -225,12 +225,14 @@ def zero_or_few_shots_pipeline(
             pred_outputs = OrderedDict()
             for s in processed_example:
                 logger.info(s)
-                output = chatbot_chain.run(
-                    example_input=example["text"],
-                    sentence_input=s,
-                    instruction_begin=model.instruction_begin,
-                    instruction_end=model.instruction_end,
-                )
+                input = {
+                    "example_input": example["text"],
+                    "sentence_input": s,
+                    "instruction_begin": model.instruction_begin,
+                    "instruction_end": model.instruction_end
+                }
+                output = chatbot_chain.invoke(input)
+
                 logger.info(output)
                 # pred_outputs += f'"{s}": "{output}",'
                 pred_outputs[s] = output
