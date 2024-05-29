@@ -43,10 +43,13 @@ PROMPT = {
         
     """,
     2: """
+    You are a helpful assistant which is an expert in detecting logical fallacies!
+    Please identify any and all logical fallacies present in the following text.\n
+    Let's think step by step by going through the sentences and checking them for every single fallacy:
+
+    "{example_input}"
+
     {instruction_begin}
-
-    Text: "{example_input}"
-
     Based on the above text, identify the fallacy (if any) in the following sentence. If a fallacy is present, specify the type(s) of fallacy without providing explanations. The possible types of fallacy are:
     - appeal to positive emotion
     - appeal to anger
@@ -79,81 +82,81 @@ PROMPT = {
 }
 
 
-ALT_PROMPT = {
-    0: """
-    {instruction_begin}
+# ALT_PROMPT = {
+#     0: """
+#     {instruction_begin}
 
-    Definitions:
-    - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
-    - A fallacious argument is an argument where the premises do not entail the conclusion.
+#     Definitions:
+#     - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
+#     - A fallacious argument is an argument where the premises do not entail the conclusion.
 
-    Text: "{example_input}"
+#     Text: "{example_input}"
 
-    Based on the above text, determine whether the following sentence is part of a fallacious argument or not:
+#     Based on the above text, determine whether the following sentence is part of a fallacious argument or not:
     
-    Sentence: "{sentence_input}" {instruction_end}
+#     Sentence: "{sentence_input}" {instruction_end}
     
-    Output:
+#     Output:
     
-    """,
-    1: """
-    {instruction_begin}
+#     """,
+#     1: """
+#     {instruction_begin}
 
-    Definitions:
-    - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
-    - A fallacious argument is an argument where the premises do not entail the conclusion.
+#     Definitions:
+#     - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
+#     - A fallacious argument is an argument where the premises do not entail the conclusion.
 
-    Text: "{example_input}"
+#     Text: "{example_input}"
 
-    Based on the above text, determine whether the following sentence is part of a fallacious argument or not. If it is, indicate the type(s) of fallacy without providing explanations. The potential types of fallacy include:
-    - appeal to emotion
-    - fallacy of logic
-    - fallacy of credibility    
+#     Based on the above text, determine whether the following sentence is part of a fallacious argument or not. If it is, indicate the type(s) of fallacy without providing explanations. The potential types of fallacy include:
+#     - appeal to emotion
+#     - fallacy of logic
+#     - fallacy of credibility    
     
-    Sentence: "{sentence_input}" {instruction_end}
+#     Sentence: "{sentence_input}" {instruction_end}
     
-    Output:
+#     Output:
         
-    """,
-    2: """
-    {instruction_begin}
+#     """,
+#     2: """
+#     {instruction_begin}
 
-    Definitions:
-    - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
-    - A fallacious argument is an argument where the premises do not entail the conclusion.
+#     Definitions:
+#     - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
+#     - A fallacious argument is an argument where the premises do not entail the conclusion.
     
-    Text: "{example_input}"
+#     Text: "{example_input}"
 
-    Based on the above text, determine whether the following sentence is part of a fallacious argument or not. If it is, indicate the type(s) of fallacy without providing explanations. The potential types of fallacy include:
-    - appeal to positive emotion
-    - appeal to anger
-    - appeal to fear
-    - appeal to pity
-    - appeal to ridicule
-    - appeal to worse problems
-    - causal oversimplification
-    - circular reasoning
-    - equivocation
-    - false analogy
-    - false causality
-    - false dilemma
-    - hasty generalization
-    - slippery slope
-    - straw man
-    - fallacy of division
-    - ad hominem
-    - ad populum
-    - appeal to (false) authority
-    - appeal to nature
-    - appeal to tradition
-    - guilt by association
-    - tu quoque
+#     Based on the above text, determine whether the following sentence is part of a fallacious argument or not. If it is, indicate the type(s) of fallacy without providing explanations. The potential types of fallacy include:
+#     - appeal to positive emotion
+#     - appeal to anger
+#     - appeal to fear
+#     - appeal to pity
+#     - appeal to ridicule
+#     - appeal to worse problems
+#     - causal oversimplification
+#     - circular reasoning
+#     - equivocation
+#     - false analogy
+#     - false causality
+#     - false dilemma
+#     - hasty generalization
+#     - slippery slope
+#     - straw man
+#     - fallacy of division
+#     - ad hominem
+#     - ad populum
+#     - appeal to (false) authority
+#     - appeal to nature
+#     - appeal to tradition
+#     - guilt by association
+#     - tu quoque
     
-    Sentence: "{sentence_input}" {instruction_end}
+#     Sentence: "{sentence_input}" {instruction_end}
     
-    Output:
-    """,
-}
+#     Output:
+#     """,
+# }
 
 
 def zero_or_few_shots_pipeline(
@@ -161,22 +164,11 @@ def zero_or_few_shots_pipeline(
     dataset_path: str = None,
     prediction_path: str = None,
     level: int = 0,
-    alt_prompt: bool = True,
+    # alt_prompt: bool = True,
 ):
     logger = logging.getLogger("MafaldaLogger")
 
-    if alt_prompt:
-        prompt = PromptTemplate(
-            input_variables=[
-                "example_input",
-                "sentence_input",
-                "instruction_begin",
-                "instruction_end",
-            ],
-            template=ALT_PROMPT[level],
-        )
-    else:
-        prompt = PromptTemplate(
+    prompt = PromptTemplate(
             input_variables=[
                 "example_input",
                 "sentence_input",
@@ -221,7 +213,6 @@ def zero_or_few_shots_pipeline(
                 continue
 
             logger.info(example["text"])
-            # pred_outputs = '{"prediction": {'
             pred_outputs = OrderedDict()
             for s in processed_example:
                 logger.info(s)
@@ -234,9 +225,7 @@ def zero_or_few_shots_pipeline(
                 output = chatbot_chain.invoke(input)
 
                 logger.info(output)
-                # pred_outputs += f'"{s}": "{output}",'
                 pred_outputs[s] = output
-            # pred_outputs = pred_outputs[:-1] + "}}"
             json_line = json.dumps(
                 {
                     "text": example["text"],
