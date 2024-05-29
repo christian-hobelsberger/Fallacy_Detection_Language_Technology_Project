@@ -82,7 +82,7 @@ CHAIN_OF_THOUGHT = {
 }
 
 
-ALT_PROMPT = {
+THREAD_OF_THOUGHT_ZERO_SHOT = {
     0: """
     {instruction_begin}
 
@@ -119,42 +119,17 @@ ALT_PROMPT = {
         
     """,
     2: """
-    {instruction_begin}
-
-    Definitions:
-    - An argument consists of an assertion called the conclusion and one or more assertions called premises, where the premises are intended to establish the truth of the conclusion. Premises or conclusions can be implicit in an argument.
-    - A fallacious argument is an argument where the premises do not entail the conclusion.
-    
+    As a content reviewer, I provide multiple fallacies which might occur in the text.
+    You need to identify the fallacies, if any, in the text.
     Text: "{example_input}"
-
-    Based on the above text, determine whether the following sentence is part of a fallacious argument or not. If it is, indicate the type(s) of fallacy without providing explanations. The potential types of fallacy include:
-    - appeal to positive emotion
-    - appeal to anger
-    - appeal to fear
-    - appeal to pity
-    - appeal to ridicule
-    - appeal to worse problems
-    - causal oversimplification
-    - circular reasoning
-    - equivocation
-    - false analogy
-    - false causality
-    - false dilemma
-    - hasty generalization
-    - slippery slope
-    - straw man
-    - fallacy of division
-    - ad hominem
-    - ad populum
-    - appeal to (false) authority
-    - appeal to nature
-    - appeal to tradition
-    - guilt by association
-    - tu quoque
+    {instruction_begin}
+    Walk me through this context in manageable parts step by step,
+    summarizing and analyzing as we go.
     
     Sentence: "{sentence_input}" {instruction_end}
     
-    Output:
+    Answer:
+    
     """,
 }
 
@@ -171,8 +146,8 @@ def zero_or_few_shots_pipeline(
 
     if prompt == "CoT":
         template = CHAIN_OF_THOUGHT[level]
-    # elif prompt == "ToT":
-    #     print('lol')
+    elif prompt == "ToT-zero":
+        template = THREAD_OF_THOUGHT_ZERO_SHOT[level]
     # elif prompt == "baseline":
     #     print('lol')
 
