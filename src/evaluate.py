@@ -215,6 +215,8 @@ def clean_pred_output(pred_output: str):
 
 
 def extract_labels_level_2(pred_output: str):
+    print(f"pred_output is of type {type(pred_output)}. Here it is:")
+    print(pred_output)
     idx_output = pred_output.find("Output:")
     if idx_output != -1:
         pred_output = pred_output[idx_output:]
@@ -388,6 +390,9 @@ def build_prediction_spans(
         y_pred = OrderedDict()
 
         for sentence, generated_out in pred_instance["prediction"].items():
+            # Ensure correct type. For some models, generated_out is a dict, not an str.
+            if not type(generated_out) == str:
+                generated_out = generated_out["text"]
             if level == 2:
                 pred_label = extract_labels_level_2(generated_out)
             else:
