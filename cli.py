@@ -1,6 +1,7 @@
 import argparse
 
 import os
+import time
 
 from src.classification_models.baseline_models import RandomModel, SilentModel
 from src.classification_models.openai_based_models import ChatGPTModel
@@ -15,6 +16,9 @@ from src.utils import setup_logger
 def run_experiment(
         model: str, size: str, quantization: str, prompt: str, level: int, n_gpu_layers: int = 0,
         ):
+    
+    # # For performance/load scheduling, locally.
+    # time.sleep(10800)
 
     model = LLaMABasedQuantizedModel(
         model_size=size,
