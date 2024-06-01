@@ -17,8 +17,8 @@ def run_experiment(
         model: str, size: str, quantization: str, prompt: str, level: int, n_gpu_layers: int = 0,
         ):
     
-    # For performance/load scheduling, locally.
-    time.sleep(20000)
+    # # For performance/load scheduling, locally.
+    # time.sleep(20000)
 
     model = LLaMABasedQuantizedModel(
         model_size=size,
