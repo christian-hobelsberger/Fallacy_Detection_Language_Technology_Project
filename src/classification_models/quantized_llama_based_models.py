@@ -1,7 +1,10 @@
 import logging
 import os
 import re
+import torch
 from huggingface_hub import hf_hub_download
+from transformers import pipeline
+from llama_cpp import Llama
 
 def extract_hf_url_details(url):
     # Regex pattern to extract details from the URL
@@ -30,10 +33,6 @@ def download_from_hf(url, local_filename):
         print(f"Downloaded {local_filename} successfully.")
     except Exception as e:
         print(f"Error downloading file: {e}")
-
-import torch
-from llama_cpp import Llama
-from transformers import pipeline
 
 logger = logging.getLogger("MafaldaLogger")
 
@@ -273,6 +272,7 @@ def initialize_model(tmp_model_name: str, url: str, n_gpu_layers: int = 0):
     if not os.path.exists(model_path):
         logger.info("Downloading model...")
         download_from_hf(url, model_path)
+
     model = Llama(model_path=model_path, n_ctx=4096, n_gpu_layers=n_gpu_layers, seed=42)
     return model
 
