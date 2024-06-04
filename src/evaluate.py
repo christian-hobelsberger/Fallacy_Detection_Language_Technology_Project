@@ -218,6 +218,8 @@ def extract_labels_level_2(pred_output: str):
     print(f"pred_output is of type {type(pred_output)}. Here it is:")
     print(pred_output)
     idx_output = pred_output.find("Output:")
+    if idx_output == -1:
+        idx_output = pred_output.find("Answer:")
     if idx_output != -1:
         pred_output = pred_output[idx_output:]
     idx_to_remove = pred_output.find("Based on the above text, determine")
@@ -244,6 +246,8 @@ def extract_labels_level_2(pred_output: str):
 
 def extract_labels_level_1(pred_output: str):
     idx_output = pred_output.find("Output:")
+    if idx_output == -1:
+        idx_output = pred_output.find("Answer:")
     if idx_output != -1:
         pred_output = pred_output[idx_output:]
     idx_to_remove = pred_output.find("Based on the above text, determine")
