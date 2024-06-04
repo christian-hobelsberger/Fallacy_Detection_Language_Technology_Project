@@ -18,7 +18,7 @@ def run_experiment(
         ):
     
     # # For performance/load scheduling, locally.
-    # time.sleep(20000)
+    # time.sleep(5940)
 
     model = LLaMABasedQuantizedModel(
         model_size=size,
