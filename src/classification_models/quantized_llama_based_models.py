@@ -267,13 +267,35 @@ LLAMA_BASED_MODELS = {
     },
 }
 
-def initialize_model(tmp_model_name: str, url: str, n_gpu_layers: int = 0):
+def initialize_model(tmp_model_name: str, url: str, n_gpu_layers: int = 0, main_gpu: int = 0):
     model_path = f"models/{tmp_model_name}"
+    
     if not os.path.exists(model_path):
         logger.info("Downloading model...")
         download_from_hf(url, model_path)
 
-    model = Llama(model_path=model_path, n_ctx=4096, n_gpu_layers=n_gpu_layers, seed=42)
+    try:
+        logger.info("Initializing model...")
+        model = Llama(
+            model_path=model_path,
+            n_gpu_layers=n_gpu_layers,
+            main_gpu=main_gpu,
+            seed=42,
+            n_ctx=4096
+        )
+
+        # # Determine the device (GPU if available, otherwise CPU)
+        # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # logger.info(f"Using device: {device}")
+
+        # # Move the model to the selected device
+        # model.to(device)
+        
+        logger.info("Model initialized and moved to device")
+    except Exception as e:
+        logger.error(f"Failed to initialize model: {e}", exc_info=True)
+        model = None
+    
     return model
 
 
