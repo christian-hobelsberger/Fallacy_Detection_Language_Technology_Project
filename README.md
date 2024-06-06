@@ -39,6 +39,22 @@ Insert Abstract here
 |        | Generation Knowledge | 37.08         | 34.50      | 35.02        |
 |        | Self-Consistency     | 31.54         | 29.94      | 30.05        |
 
+### Multi-class
+
+| Model  | Prompting            | Precision (%) | Recall (%) | F1-Score (%) |
+|--------|----------------------|---------------|------------|--------------|
+| Llama3 | Thread-of-Thought    | **47.50**     | **34.80**      | **40.17**    |
+|        | Chain-of-Thought     | 43.00         | 33.08      | 37.39        |
+|        | Generation Knowledge | 42.00         | 30.22      | 35.15        |
+|        | Self-Consistency     | 27.00         | 18.56      | 22.00        |
+| Gemma  | Thread-of-Thought    | **52.00**     | **38.52**  | **44.26**    |
+|        | Chain-of-Thought     | 26.00         | 17.99      | 21.27        |
+|        | Generation Knowledge | 50.00         | 38.02      | 43.20        |
+|        | Self-Consistency     | 34.50         | 24.82      | 28.87        |
+| Mistral| Thread-of-Thought    | 57.50     | 44.06  | 49.89    |
+|        | Chain-of-Thought     | **65.50**     | **52.61**  | **58.35**    |
+|        | Generation Knowledge | 48.00         | 35.42      | 40.76        |
+|        | Self-Consistency     | 37.50         | 28.85      | 32.61        |
 
 ## Usage instructions
 
