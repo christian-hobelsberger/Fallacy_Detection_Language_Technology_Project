@@ -1,4 +1,4 @@
-# Fallacy Detection
+# Fallacy Detection Using Different Prompting Techniques
 
 ## Abstract
 
