@@ -63,6 +63,20 @@ Clone the repository
 ```
 git clone https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project.git
 ```
+
+### Repository Structure
+
+This repository is organized into several key directories, each serving a distinct purpose in the project workflow:
+
+- [Data](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Data): Contains raw and processed data used throughout the project.
+- [Evaluation](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Evaluation): Houses scripts and tools for assessing model performance.
+- [Models](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Models): Stores the code nessecary for deploying the models.
+- [Postprocessing](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Postprocessing): Includes scripts for refining and transforming model outputs.
+- [Preprocessing](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Preprocessing): Contains scripts for preparing raw data for model evaluation.
+- [Prompting](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Prompting): Contains files with different prompting techniques used on the models.
+
+Additionally, the [requirements.txt](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/blob/main/requirements.txt) file lists the dependencies necessary to run the project, ensuring that all required libraries and packages are installed.
+
 ### Promptings
 
 ### Data Postprocessing
