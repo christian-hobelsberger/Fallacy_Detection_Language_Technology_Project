@@ -56,29 +56,31 @@ Insert Abstract here
 |        | Generation Knowledge | 48.00         | 35.42      | 40.76        |
 |        | Self-Consistency     | 37.50         | 28.85      | 32.61        |
 
-## Usage instructions
+### Usage instructions
 
 Clone the repository
 
 ```
 git clone https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project.git
 ```
+The [requirements.txt](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/blob/main/requirements.txt) file lists the dependencies necessary to run the project, ensuring that all required libraries and packages are installed.
 
 ### Repository Structure
 
 This repository is organized into several key directories, each serving a distinct purpose in the project workflow:
 
 - [Data](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Data): Contains raw and processed data used throughout the project.
-- [Evaluation](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Evaluation): Houses scripts and tools for assessing model performance.
-- [Models](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Models): Stores the code nessecary for deploying the models.
+
+#### Data Pre/post-processing
 - [Postprocessing](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Postprocessing): Includes scripts for refining and transforming model outputs.
 - [Preprocessing](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Preprocessing): Contains scripts for preparing raw data for model evaluation.
+
+#### Models
+- [Models](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Models): Stores the code nessecary for deploying the models.
+
+#### Promptings
 - [Prompting](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Prompting): Contains files with different prompting techniques used on the models.
 
-Additionally, the [requirements.txt](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/blob/main/requirements.txt) file lists the dependencies necessary to run the project, ensuring that all required libraries and packages are installed.
+#### Evaluation
+- [Evaluation](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Evaluation): Houses scripts and tools for assessing model performance.
 
-### Promptings
-
-### Data Postprocessing
-
-### Evaluation
