@@ -69,6 +69,8 @@ The [requirements.txt](https://github.com/christian-hobelsberger/Fallacy_Detecti
 
 This repository is organized into several key directories, each serving a distinct purpose in the project workflow:
 
+#### Dataset
+
 - [Data](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Data): Contains raw and processed data used throughout the project.
 
 #### Data Pre/post-processing
@@ -82,5 +84,5 @@ This repository is organized into several key directories, each serving a distin
 - [Prompting](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Prompting): Contains files with different prompting techniques used on the models.
 
 #### Evaluation
-- [Evaluation](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Evaluation): Houses scripts and tools for assessing model performance.
+- [Evaluation](https://github.com/christian-hobelsberger/Fallacy_Detection_Language_Technology_Project/tree/main/Evaluation): Houses scripts and tools for assessing model performance. Where _Evaluate.ipynb_ aims to evaluate multilabel classification, and _Vanilla_Evaluate.ipynb_ is for milticlass classification.
 
