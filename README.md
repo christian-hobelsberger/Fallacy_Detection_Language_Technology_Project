@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ## Run Experiments with Local Models
 
-The following script will download a quantized version of the selected model in [GGUF format](https://huggingface.co/docs/hub/gguf) from [HugggingFace](huggingface.co). Some models may require an access token due to the original developer's policy, while others are sourced from third party repositories.
+The following script will download a quantized version of the selected model in [GGUF format](https://huggingface.co/docs/hub/gguf) from [HuggingFace](huggingface.co). Some models may require an access token of an authorized account, due to the original developer's policy, while others are sourced from third party repositories.
 
 ### with GPU
 ```bash
